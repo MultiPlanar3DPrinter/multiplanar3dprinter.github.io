@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Blog #8: Progress as of 2022-03-19 (Symposium Week) | MP3DP</title>
+	<link rel="icon" type="image/png" href="/favicon.png">
+	<link rel="stylesheet" href="/css/reset.css" />
+	<link rel="stylesheet" href="/css/mobile-base.css" />
+	<link rel="stylesheet" media="(max-width: 600px)" href="/css/mobile-nav.css" />
+	<link rel="stylesheet" media="(min-width: 600px)" href="/css/nav.css" />
+	<link rel="stylesheet" media="(min-width: 600px)" href="/css/tablet.css" />
+	<link rel="stylesheet" media="(min-width: 1000px)" href="/css/desktop.css" />
+	<link rel="preconnect" href="https://fonts.googleapis.com"> 
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+	<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta charset="UTF-8" />
+	<meta name="description" content="Multi-Planar 3D Printer" />
+	<meta name="keywords" content="project, fydp, mechatronics, robotics, robots, control systems, waterloo" />
+	<meta name="author" content="Brendan Arciszewski, Louie Chen, Lucille Huang, Edward Yang" />
+	
+</head>
+<body>
+	<nav id="nav">
+		<div id="navMenuToggle">
+			<input type="checkbox" title="Show/Hide Mobile Menu"/>
+			<span class="burger"></span>
+			<span class="burger"></span>
+			<span class="burger"></span>
+			<ul id="navMenu">
+				
+				<li><a 
+				   href="/"
+				   
+				   
+				   title="Home">
+					Home
+				</a></li>
+				
+				<li><a 
+				   href="/blog/"
+				   
+				   
+				   title="Blog">
+					Blog
+				</a></li>
+				
+				<li><a 
+				   href="https://github.com/multiplanar3dprinter"
+				   
+				   
+				   title="Source Code">
+					Source Code
+				</a></li>
+				
+			</ul>
+		</div>
+	</nav>
+	
+
+
+
+
+
+<section role="banner" id="header">
+	<header><h1>Blog #8: Progress as of 2022-03-19 (Symposium Week)</h1></header>
+</section>
+
+
+<main>
+	
+<div id="con_sidebar">
+    
+<div class="article-info">
+	<div class="article-dates">
+		
+		<span class="article-date">2022-03-19</span>
+		
+		
+		(Updated <span class="article-date">2022-03-22</span>)
+		
+	</div>
+	<div class="article-taxonomies">
+		
+			<ul class="article-tags">
+				
+				<li><a href='https://multiplanar3dprinter.github.io/tags/general/'>#general</a></li>
+				
+			</ul>
+		
+	</div>
+</div>
+
+</div>
+
+	
+	
+<div id="con_article">
+    <article><p>A general summary of project progress as of March 19th, 2022.
+This week was symposium!</p>
+<span id="continue-reading"></span><h2 id="software">Software</h2>
+<h3 id="firmware">Firmware</h3>
+<p><a href="https://www.klipper3d.org/G-Codes.html#gcode_macro">GCode macros</a> were added to
+control the turn and tilt axes automatically. Unfortunately, the commands could
+not be synced together and performed in parallel due to a
+<a href="https://github.com/Klipper3d/klipper/issues/5093">bug</a> with multi-mcu support
+for this function.</p>
+<h3 id="slicer">Slicer</h3>
+<p>Since the open source slicer named Slicer4RTN could only slice a part at one
+angle only, an alternate strategy needed to be devised to showcase the full
+functionality of the system. As a proof of concept, a part could be broken down
+to several subparts manually to be sliced in the appropriate angles. Then the
+appropriate turn and tilt could be added in between to piece the subparts
+together.</p>
+<h3 id="slicer-firmware-integration">Slicer/Firmware Integration</h3>
+<p>We also attempted to print a shape that would require multiple tilt and turn
+movements during the print. The gif below is a visualization of the GCode of the
+subparts, which have been sliced at different angles and pieced back together to
+form the part.</p>
+<p><img src="/media/2022-03-19/Stair.gif" alt="Multi-Sliced Stair" /></p>
+<p>However the print result was never perfect. To print the part successfully
+involved manually writing out the turn and tilt compensation movements for each
+subpart (and verifying that the xyz compensation was successful, or else
+manually modifying that too). Then, the coordinates the printer thought the
+extruder was at had to be reset. This aligned the end position of the nozzle for
+the previous subpart and the start position of nozzle for the next subpart, but
+not with high enough accuracy. When the printer restarted printing, the next
+subpart was not perfectly aligned.</p>
+<p>The following gif shows the print that resulted from manual alignment.</p>
+<p><img src="/media/2022-03-19/staircase-print.gif" alt="Manual Staircase Print" /></p>
+<p>And this one shows the alignment of the first transition in the print.</p>
+<p><img src="/media/2022-03-19/part1-transition.gif" alt="Automatic Staircase Transition 1" /></p>
+<p>Then, the second transition in the print.</p>
+<p><img src="/media/2022-03-19/part2-transition.gif" alt="Automatic Staircase Transition 2" /></p>
+<p>And here you can see the clear misalignment once it starts printing.</p>
+<p><img src="/media/2022-03-19/staircase-misalignment.gif" alt="Automatic Staircase Misalignment" /></p>
+<h2 id="electrical">Electrical</h2>
+<p>STM32CubeIDE was used to configure the pins and run preliminary tests for the
+functionality of all the peripherals. A blinking Test LED was used to indicate
+when the program was running. The motor controllers and PWM control of the fans
+were the primary options tested and were able to effectively drive and control
+the speed of each of those respectively. Other peripherals were GPIOs that were
+confirmed to connect to their respective pins properly, but more detailed
+testing was planned when the proper functionality was added through the
+firmware.</p>
+<p>However, a problem that we ran into when trying to run the Klipper firmware was
+that the USB is functional when set up and programmed from the STM32CubeIDE, but
+does not work when the Klipper firmware is loaded. We did not have the time to
+properly debug the reasons why, especially with the volume of code that makes up
+Klipper, so instead we resorted to running Klipper on a Raspberry Pi which would
+drive two separate Ender 3 motor controllers in order to add the additional
+stepper motor and limit switch functionality we needed.</p>
+<h2 id="symposium">Symposium</h2>
+<p>Setup went relatively smoothly, though the staircase print was still misaligned
+more often than not. Thus, we decided to simply print the MTE block over the
+course of the symposium instead. This was also great because the shape was
+pretty exciting to look at and all the people seemed pretty impressed by it.</p>
+<p><img src="/media/2022-03-19/symposium.png" alt="Symposium Station" /></p>
+</article>
+</div>
+
+</main>
+
+
+	<footer id="footer"><div id="row1">
+		<span style="display: inline-block;">Copyright &copy; 2021—2022 Brendan Arciszewski, Louie Chen, Lucille Huang, Edward Yang</span>
+	</div></footer>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title></title>
+	<link href="https://multiplanar3dprinter.github.io/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://multiplanar3dprinter.github.io"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2022-03-22T00:00:00+00:00</updated>
+	<id>https://multiplanar3dprinter.github.io/atom.xml</id>
+	<entry xml:lang="en">
+		<title>Blog #8: Progress as of 2022-03-19 (Symposium Week)</title>
+		<published>2022-03-19T00:00:00+00:00</published>
+		<updated>2022-03-22T00:00:00+00:00</updated>
+		<link href="https://multiplanar3dprinter.github.io/blog/blog8/" type="text/html"/>
+		<id>https://multiplanar3dprinter.github.io/blog/blog8/</id>
+		<content type="html">&lt;p&gt;A general summary of project progress as of March 19th, 2022.
+This week was symposium!&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;software&quot;&gt;Software&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;firmware&quot;&gt;Firmware&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.klipper3d.org&#x2F;G-Codes.html#gcode_macro&quot;&gt;GCode macros&lt;&#x2F;a&gt; were added to
+control the turn and tilt axes automatically. Unfortunately, the commands could
+not be synced together and performed in parallel due to a
+&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Klipper3d&#x2F;klipper&#x2F;issues&#x2F;5093&quot;&gt;bug&lt;&#x2F;a&gt; with multi-mcu support
+for this function.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;slicer&quot;&gt;Slicer&lt;&#x2F;h3&gt;
+&lt;p&gt;Since the open source slicer named Slicer4RTN could only slice a part at one
+angle only, an alternate strategy needed to be devised to showcase the full
+functionality of the system. As a proof of concept, a part could be broken down
+to several subparts manually to be sliced in the appropriate angles. Then the
+appropriate turn and tilt could be added in between to piece the subparts
+together.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;slicer-firmware-integration&quot;&gt;Slicer&#x2F;Firmware Integration&lt;&#x2F;h3&gt;
+&lt;p&gt;We also attempted to print a shape that would require multiple tilt and turn
+movements during the print. The gif below is a visualization of the GCode of the
+subparts, which have been sliced at different angles and pieced back together to
+form the part.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-03-19&#x2F;Stair.gif&quot; alt=&quot;Multi-Sliced Stair&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;However the print result was never perfect. To print the part successfully
+involved manually writing out the turn and tilt compensation movements for each
+subpart (and verifying that the xyz compensation was successful, or else
+manually modifying that too). Then, the coordinates the printer thought the
+extruder was at had to be reset. This aligned the end position of the nozzle for
+the previous subpart and the start position of nozzle for the next subpart, but
+not with high enough accuracy. When the printer restarted printing, the next
+subpart was not perfectly aligned.&lt;&#x2F;p&gt;
+&lt;p&gt;The following gif shows the print that resulted from manual alignment.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-03-19&#x2F;staircase-print.gif&quot; alt=&quot;Manual Staircase Print&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;And this one shows the alignment of the first transition in the print.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-03-19&#x2F;part1-transition.gif&quot; alt=&quot;Automatic Staircase Transition 1&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Then, the second transition in the print.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-03-19&#x2F;part2-transition.gif&quot; alt=&quot;Automatic Staircase Transition 2&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;And here you can see the clear misalignment once it starts printing.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-03-19&#x2F;staircase-misalignment.gif&quot; alt=&quot;Automatic Staircase Misalignment&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;electrical&quot;&gt;Electrical&lt;&#x2F;h2&gt;
+&lt;p&gt;STM32CubeIDE was used to configure the pins and run preliminary tests for the
+functionality of all the peripherals. A blinking Test LED was used to indicate
+when the program was running. The motor controllers and PWM control of the fans
+were the primary options tested and were able to effectively drive and control
+the speed of each of those respectively. Other peripherals were GPIOs that were
+confirmed to connect to their respective pins properly, but more detailed
+testing was planned when the proper functionality was added through the
+firmware.&lt;&#x2F;p&gt;
+&lt;p&gt;However, a problem that we ran into when trying to run the Klipper firmware was
+that the USB is functional when set up and programmed from the STM32CubeIDE, but
+does not work when the Klipper firmware is loaded. We did not have the time to
+properly debug the reasons why, especially with the volume of code that makes up
+Klipper, so instead we resorted to running Klipper on a Raspberry Pi which would
+drive two separate Ender 3 motor controllers in order to add the additional
+stepper motor and limit switch functionality we needed.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;symposium&quot;&gt;Symposium&lt;&#x2F;h2&gt;
+&lt;p&gt;Setup went relatively smoothly, though the staircase print was still misaligned
+more often than not. Thus, we decided to simply print the MTE block over the
+course of the symposium instead. This was also great because the shape was
+pretty exciting to look at and all the people seemed pretty impressed by it.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-03-19&#x2F;symposium.png&quot; alt=&quot;Symposium Station&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Blog #7: Progress as of 2022-03-12 (Demo Week)</title>
+		<published>2022-03-12T00:00:00+00:00</published>
+		<updated>2022-03-22T00:00:00+00:00</updated>
+		<link href="https://multiplanar3dprinter.github.io/blog/blog7/" type="text/html"/>
+		<id>https://multiplanar3dprinter.github.io/blog/blog7/</id>
+		<content type="html">&lt;p&gt;A general summary of project progress as of March 12th, 2022. This week was our
+demonstration to our professors, which happened on Wednesday, March 9th. The
+plan was to visually showcase the completed system, movement of the printhead
+and possibly a print demo if time allowed.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;software&quot;&gt;Software&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;slicer&quot;&gt;Slicer&lt;&#x2F;h3&gt;
+&lt;p&gt;An open source slicer named Slicer4RTN is used to generate the GCode. It is
+built on top of multiple slicers like Slic3r and CuraEngine and additional
+logics to generate GCodes for 3D printers with Rotating Tilted Nozzle(RTN),
+which is a 4-axis printer. It has the functionality of slicing parts at the
+angles requested. Below are gif showing several sliced parts at a 45° angle.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-03-12&#x2F;SlantedOverhang.gif&quot; alt=&quot;Sliced 45° Part with Overhang&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;electrical&quot;&gt;Electrical&lt;&#x2F;h2&gt;
+&lt;p&gt;The PCBs did not arrive in time for the demo itself, but they arrived a few days
+later. From there, some preliminary testing would begin. From the first
+inspection, there did not seem to be any issues with the boards. The power rails
+for 24V, 5V and 3.3V were all functional, though the 5V rail was instead at
+4.6V. However, since there aren’t many 5V components on the board, especially
+with digital logic, this discrepancy is not an issue. The motor controllers were
+also configured with a reference voltage set at 0.96V to limit the stepper motor
+current to 1.2A.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-03-12&#x2F;PCB.jpg&quot; alt=&quot;PCB&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;system-functionality-at-the-demo&quot;&gt;System Functionality at the Demo&lt;&#x2F;h2&gt;
+&lt;p&gt;The general functionality of the system was working by the demo date, though we
+did not have time to configure for a more complex print beside a standard test
+overhang print.&lt;&#x2F;p&gt;
+&lt;p&gt;The gif below shows the first successful supportless 90 degree print from our 3D
+printer, something that would not be possible with a standard 3D printer.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-03-12&#x2F;90deg-overhang.gif&quot; alt=&quot;90° Overhang&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Additionally, the below gif shows the movement demonstration that was shown on
+the day of the demo. It consists of each of the Tilt and Turn axes moving on
+their own as well as together.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-03-12&#x2F;Movement.gif&quot; alt=&quot;Moving Turn &amp;amp; Tilt Axes&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Blog #6: Progress as of 2022-03-05</title>
+		<published>2022-03-05T00:00:00+00:00</published>
+		<updated>2022-03-22T00:00:00+00:00</updated>
+		<link href="https://multiplanar3dprinter.github.io/blog/blog6/" type="text/html"/>
+		<id>https://multiplanar3dprinter.github.io/blog/blog6/</id>
+		<content type="html">&lt;p&gt;A general summary of project progress as of March 5th, 2022.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;electrical&quot;&gt;Electrical&lt;&#x2F;h2&gt;
+&lt;p&gt;PCB fabrication and assembly has been completed, but the package is still in
+transit.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Blog #5: Progress as of 2022-02-26</title>
+		<published>2022-02-26T00:00:00+00:00</published>
+		<updated>2022-03-17T00:00:00+00:00</updated>
+		<link href="https://multiplanar3dprinter.github.io/blog/blog5/" type="text/html"/>
+		<id>https://multiplanar3dprinter.github.io/blog/blog5/</id>
+		<content type="html">&lt;p&gt;A general summary of project progress as of February 26th, 2022.
+This week was reading week!&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;electrical&quot;&gt;Electrical&lt;&#x2F;h2&gt;
+&lt;p&gt;The PCB layout for the custom controller board has been completed.&lt;&#x2F;p&gt;
+&lt;p&gt;The board is a 2 layer board to save on production time as additional time will
+be needed for the manufacturer to assemble the boards. In general, the layout of
+the components is reminiscent of the stock Ender 3 controller board, with the
+mounting holes and USB placement matching the Ender 3 board exactly so that it
+can be secured in the same enclosure. For the ICs, the layout requirements were
+followed in the data sheets and the power lines were kept as thick as possible
+to ensure that they wouldn’t burn up with high current. Some vias were also
+added for heat dissipation near the MOSFETs, power area and the motor
+controllers, wherever is most prone to heating up. Lastly, test points were
+added for connections that are not easily accessible for testing and debugging,
+which should hopefully make the process easier.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-02-26&#x2F;02-28-PCBLayout.png&quot; alt=&quot;PCB Layout&quot; &#x2F;&gt;
+&lt;img src=&quot;&#x2F;media&#x2F;2022-02-26&#x2F;02-28-PCB3D.png&quot; alt=&quot;3D PCB Visualization&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Blog #4: Progress as of 2022-02-19</title>
+		<published>2022-02-19T00:00:00+00:00</published>
+		<updated>2022-03-16T00:00:00+00:00</updated>
+		<link href="https://multiplanar3dprinter.github.io/blog/blog4/" type="text/html"/>
+		<id>https://multiplanar3dprinter.github.io/blog/blog4/</id>
+		<content type="html">&lt;p&gt;A general summary of project progress as of February 19th, 2022.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;electrical&quot;&gt;Electrical&lt;&#x2F;h2&gt;
+&lt;p&gt;The schematic for the custom controller board has been completed. Each of the
+sections are described in further detail below.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-02-19&#x2F;02-23-FullSchematic.jpg&quot; alt=&quot;Full Electrical Schematic&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;peripherals&quot;&gt;Peripherals&lt;&#x2F;h3&gt;
+&lt;p&gt;The thermistors are in a voltage divider configuration so that the changes in
+resistance can be calculated in firmware and the limit switches have pull-up
+resistors to set the default state until the switch pulls the pin low. Both of
+these configurations have decoupling capacitors to help filter out high
+frequency noise. The fans and heaters all have the same MOSFET and pull down
+resistor configuration, though the MOSFETs are rated for different drain
+currents since the Heaters are rated for a much higher power. A MOSFET driver
+was added for the heaters to shift the logic level up to make sure that the
+drain-source ON resistance is low enough during operation. And for the remaining
+USB and LCD connections, research was conducted into how they should be
+connected and that was used as a reference for the best way to connect those
+peripherals. The LCD had to match the connections for the display on the Ender 3
+and the USB had to connect to the correct pins on the STM32. A USB EMI Shield
+was added to reduce noise and interference on the high speed lines.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-02-19&#x2F;02-23-Peripherals.png&quot; alt=&quot;Peripherals Schematic&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;a4988-stepper-motor-drivers&quot;&gt;A4988 Stepper Motor Drivers&lt;&#x2F;h3&gt;
+&lt;p&gt;In the motor controller section, it consisted of the 6 motor controllers that
+are needed for the 6 axes. For these, the layout primarily follows the
+requirements laid out in the data sheet. The sense resistors and the
+potentiometer at the current limiting voltage reference were chosen such that
+the maximum current the controller can draw is below the rating of the motors at
+1.5A. Additionally, the jumpers at the MSx pins, which define the step size are
+used for calibrating the reference voltage, since they need to remain
+unconnected when doing that. To allow for more customization after assembly of
+the PCBs,  the jumpers can just be bridged with solder to pull them up and set
+the smallest step size possible as 1&#x2F;16th.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-02-19&#x2F;02-23-StepperCtrl.png&quot; alt=&quot;Stepper Control Schematic&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;mcu&quot;&gt;MCU&lt;&#x2F;h3&gt;
+&lt;p&gt;The MCU section mostly consists of the setup required for normal operation as
+well as all the connections from the peripherals. STM32CubeIDE was used to lay
+out all the pins so that there aren’t any conflicts, and that the pins
+correspond with where I will be placing the components. A test LED and test
+Button was also added to leftover pins to help with debugging.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-02-19&#x2F;02-23-MCU.png&quot; alt=&quot;MCU Schematic&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;power&quot;&gt;Power&lt;&#x2F;h3&gt;
+&lt;p&gt;Finally, the power section consists of a reverse voltage protection circuit, a
+buck converter and an LDO for converting the required voltage rails. The
+majority of the board uses 24V or 3.3V, but the MOSFET Driver and USB use 5V so
+the buck converter converts to 5V first before using the LDO. For these parts,
+they were chosen based on availability from the PCB vendor with suitable voltage
+and current ratings. The data sheet was followed closely for the design of these
+power conversion circuits.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-02-19&#x2F;02-23-Power.png&quot; alt=&quot;Power Schematic&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Blog #3: Progress as of 2022-02-12</title>
+		<published>2022-02-12T00:00:00+00:00</published>
+		<updated>2022-03-16T00:00:00+00:00</updated>
+		<link href="https://multiplanar3dprinter.github.io/blog/blog3/" type="text/html"/>
+		<id>https://multiplanar3dprinter.github.io/blog/blog3/</id>
+		<content type="html">&lt;p&gt;A general summary of project progress as of February 12th, 2022.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;electrical&quot;&gt;Electrical&lt;&#x2F;h2&gt;
+&lt;p&gt;Completed a detailed high level block diagram of all required peripherals with
+all the signals that the microcontroller needs to drive. The total number of
+pins required to drive all the peripherals is 40, with 3 pins per motor
+controller for EN, STEP, DIR, 8 pins for the LCD, 2 pins for USB and one pin
+each for the thermistors, limit switches, fans and heaters.&lt;&#x2F;p&gt;
+&lt;p&gt;From the pin requirements, Marlin firmware recommendations and part
+availability, the STM32F401RC microcontroller was chosen for this board.&lt;&#x2F;p&gt;
+&lt;p&gt;The stepper motor drivers were chosen as A4988s because TMC stepper drivers were
+largely out of stock, and since A4988s are basic parts, they are more readily
+available. Additionally, the stock Ender 3 uses A4988 stepper motor drivers so
+they should work well with the stepper motors already.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-02-12&#x2F;DetailedBlockDiagram.png&quot; alt=&quot;Detailed Electrical Block Diagram&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;software&quot;&gt;Software&lt;&#x2F;h2&gt;
+&lt;p&gt;Marlin has had previous attempts to add &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;MarlinFirmware&#x2F;Marlin&#x2F;issues&#x2F;16549#issuecomment-574354321&quot;&gt;5 axis
+capabilities&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Blog #2: Progress as of 2022-02-05</title>
+		<published>2022-02-05T00:00:00+00:00</published>
+		<updated>2022-03-08T00:00:00+00:00</updated>
+		<link href="https://multiplanar3dprinter.github.io/blog/blog2/" type="text/html"/>
+		<id>https://multiplanar3dprinter.github.io/blog/blog2/</id>
+		<content type="html">&lt;p&gt;A general summary of project progress as of February 5th, 2022.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;mechanical&quot;&gt;Mechanical&lt;&#x2F;h2&gt;
+&lt;p&gt;Built and assembled a completely 3D printed version of the bracket and hot
+end gears to see if the geometry was feasible. Followed this up by using
+learnings from that prototype to build a version using aluminum shafts for
+better movement and stiffness. Learned several things as a result of these
+prototypes:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Geometric tolerances for 3D printing fits&lt;&#x2F;li&gt;
+&lt;li&gt;Shaft sizing&lt;&#x2F;li&gt;
+&lt;li&gt;Bending radius for the bowden tube&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;electrical&quot;&gt;Electrical&lt;&#x2F;h2&gt;
+&lt;p&gt;Proceeding as planned (see the &lt;a href=&quot;https:&#x2F;&#x2F;multiplanar3dprinter.github.io&#x2F;blog&#x2F;blog1&#x2F;&quot; title=&quot;last week&#x27;s blog&quot;&gt;last post&lt;&#x2F;a&gt;).&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;software&quot;&gt;Software&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;firmware&quot;&gt;Firmware&lt;&#x2F;h3&gt;
+&lt;p&gt;Sticking to plan (see the &lt;a href=&quot;https:&#x2F;&#x2F;multiplanar3dprinter.github.io&#x2F;blog&#x2F;blog1&#x2F;&quot; title=&quot;last week&#x27;s blog&quot;&gt;last post&lt;&#x2F;a&gt;). Some more investigation of the
+appropriate place to modify Marlin is continuing.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;slicers&quot;&gt;Slicers&lt;&#x2F;h3&gt;
+&lt;p&gt;Sticking to plan (see the &lt;a href=&quot;https:&#x2F;&#x2F;multiplanar3dprinter.github.io&#x2F;blog&#x2F;blog1&#x2F;&quot; title=&quot;last week&#x27;s blog&quot;&gt;last post&lt;&#x2F;a&gt;).&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Blog #1: Progress as of 2022-01-28</title>
+		<published>2022-01-28T00:00:00+00:00</published>
+		<updated>2022-03-08T00:00:00+00:00</updated>
+		<link href="https://multiplanar3dprinter.github.io/blog/blog1/" type="text/html"/>
+		<id>https://multiplanar3dprinter.github.io/blog/blog1/</id>
+		<content type="html">&lt;p&gt;A general summary of project progress as of January 28th, 2022.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h2 id=&quot;mechanical&quot;&gt;Mechanical&lt;&#x2F;h2&gt;
+&lt;p&gt;The current status of the mechanical design is to begin prototyping key elements of the gear train system. The progress is to do a CAD design revision to prepare it for manufacturing and allow for further testing.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;electrical&quot;&gt;Electrical&lt;&#x2F;h2&gt;
+&lt;p&gt;Following the high level block diagram shown below, each of the required peripheral circuit connections to the MCU are to be fleshed out in detail. Additionally, the microcontroller used will be an STM32 Cortex-M4 chip. Further detail will be provided on the circuitry and parts used once the schematic is completed and the BOM is confirmed.&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;em&gt;goal&lt;&#x2F;em&gt; is to complete the schematic, PCB layout and ordering process in time to start testing the board by Reading Week.&lt;&#x2F;p&gt;
+&lt;p&gt;Confirmed that all system electrical components and peripherals should be CSA approved for the symposium.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;&#x2F;media&#x2F;2022-01-28&#x2F;HighLvlBlockDiagram.png&quot; alt=&quot;High Level Electrical Block Diagram&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;software&quot;&gt;Software&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;firmware&quot;&gt;Firmware&lt;&#x2F;h3&gt;
+&lt;p&gt;Basic investigation into Marlin is ongoing. It looks promising. Marlin would provide existing facilities
+for controlling the 2 additional stepper motors. It would need extra logic added to identify the G code
+that specifies the extruder direction, but once this is found it should be straight-forward (unless I just
+jinxed myself).&lt;&#x2F;p&gt;
+&lt;p&gt;The current &lt;em&gt;plan&lt;&#x2F;em&gt; is to modify Marlin, but the &lt;em&gt;backup plan&lt;&#x2F;em&gt; is manual independent control of the two additional
+axis. This could be handled by a Raspberry Pi.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;slicers&quot;&gt;Slicers&lt;&#x2F;h3&gt;
+&lt;p&gt;Investigation into slicers is also ongoing. Various existing slicers have been found that are designed: to be
+extensible (with 5-axis control or different slicing algorithms in mind); which already have 4-axis control or
+printing plane control (so it might be easier to add a fifth-axis); or which have some rudimentary 5-axis
+control (but which aren&#x27;t designed with our architecture in mind).&lt;&#x2F;p&gt;
+&lt;p&gt;The current &lt;em&gt;plan&lt;&#x2F;em&gt; is:
+Add custom functions to Cura’s source code to implement the ability of generating 5-axis 3D printer specific G-code&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Understand the logic in the current source code for identifying overhangs that requires support materials&lt;&#x2F;li&gt;
+&lt;li&gt;Modify the logic to generate toolpath for printing overhangs directly using rotated nozzle instead of printing support material underneath it&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;If the above could not be achieved in time, the &lt;em&gt;backup plan&lt;&#x2F;em&gt; is:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Manually divide the part into sections that needs to be printed upright the sections that are printed by rotated nozzle&lt;&#x2F;li&gt;
+&lt;li&gt;Generate G-code for both sections using Cura&lt;&#x2F;li&gt;
+&lt;li&gt;Write code to convert the G-code of the rotated section of the part appropriately&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Welcome to the Website</title>
+		<published>2022-01-21T00:00:00+00:00</published>
+		<updated>2022-01-28T00:00:00+00:00</updated>
+		<link href="https://multiplanar3dprinter.github.io/blog/hello/" type="text/html"/>
+		<id>https://multiplanar3dprinter.github.io/blog/hello/</id>
+		<content type="html">&lt;p&gt;Thank you for visiting the site! It was created using the &lt;a href=&quot;https:&#x2F;&#x2F;getzola.org&quot;&gt;Zola&lt;&#x2F;a&gt;
+static site generator and a pre-existing custom template.&lt;&#x2F;p&gt;
+&lt;span id=&quot;continue-reading&quot;&gt;&lt;&#x2F;span&gt;&lt;h1 id=&quot;fydp-website&quot;&gt;FYDP Website&lt;&#x2F;h1&gt;
+&lt;p&gt;A homepage and a blog.&lt;&#x2F;p&gt;
+&lt;p&gt;Install &lt;a href=&quot;https:&#x2F;&#x2F;www.getzola.org&#x2F;documentation&#x2F;getting-started&#x2F;installation&#x2F;&quot;&gt;Zola&lt;&#x2F;a&gt; to start.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;images&quot;&gt;Images&lt;&#x2F;h2&gt;
+&lt;p&gt;These should go under &lt;code&gt;static&#x2F;media&#x2F;&amp;lt;image&amp;gt;&lt;&#x2F;code&gt; and are referenced like &lt;code&gt;&#x2F;media&#x2F;&amp;lt;image&amp;gt;&lt;&#x2F;code&gt; within Markdown or HTML.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;build&quot;&gt;Build&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;shell&quot; class=&quot;language-shell &quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;just dev build
+or 
+zola build --drafts
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;serve&quot;&gt;Serve&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;shell&quot; class=&quot;language-shell &quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;just dev serve
+or
+zola serve --drafts
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;deployment&quot;&gt;Deployment&lt;&#x2F;h2&gt;
+&lt;p&gt;Github Actions is used for CI and to deploy to Netlify. A temporary deployment is possible if you create a Netlify account, and I will then add you to the team. You could also just push to a new branch on the org&#x27;s Github which will generate an autodeployment.&lt;&#x2F;p&gt;
+
+</content>
+	</entry>
+</feed>

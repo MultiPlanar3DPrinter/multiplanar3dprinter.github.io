@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Blog #7: Progress as of 2022-03-12 (Demo Week) | MP3DP</title>
+	<link rel="icon" type="image/png" href="/favicon.png">
+	<link rel="stylesheet" href="/css/reset.css" />
+	<link rel="stylesheet" href="/css/mobile-base.css" />
+	<link rel="stylesheet" media="(max-width: 600px)" href="/css/mobile-nav.css" />
+	<link rel="stylesheet" media="(min-width: 600px)" href="/css/nav.css" />
+	<link rel="stylesheet" media="(min-width: 600px)" href="/css/tablet.css" />
+	<link rel="stylesheet" media="(min-width: 1000px)" href="/css/desktop.css" />
+	<link rel="preconnect" href="https://fonts.googleapis.com"> 
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+	<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta charset="UTF-8" />
+	<meta name="description" content="Multi-Planar 3D Printer" />
+	<meta name="keywords" content="project, fydp, mechatronics, robotics, robots, control systems, waterloo" />
+	<meta name="author" content="Brendan Arciszewski, Louie Chen, Lucille Huang, Edward Yang" />
+	
+</head>
+<body>
+	<nav id="nav">
+		<div id="navMenuToggle">
+			<input type="checkbox" title="Show/Hide Mobile Menu"/>
+			<span class="burger"></span>
+			<span class="burger"></span>
+			<span class="burger"></span>
+			<ul id="navMenu">
+				
+				<li><a 
+				   href="/"
+				   
+				   
+				   title="Home">
+					Home
+				</a></li>
+				
+				<li><a 
+				   href="/blog/"
+				   
+				   
+				   title="Blog">
+					Blog
+				</a></li>
+				
+				<li><a 
+				   href="https://github.com/multiplanar3dprinter"
+				   
+				   
+				   title="Source Code">
+					Source Code
+				</a></li>
+				
+			</ul>
+		</div>
+	</nav>
+	
+
+
+
+
+
+<section role="banner" id="header">
+	<header><h1>Blog #7: Progress as of 2022-03-12 (Demo Week)</h1></header>
+</section>
+
+
+<main>
+	
+<div id="con_sidebar">
+    
+<div class="article-info">
+	<div class="article-dates">
+		
+		<span class="article-date">2022-03-12</span>
+		
+		
+		(Updated <span class="article-date">2022-03-22</span>)
+		
+	</div>
+	<div class="article-taxonomies">
+		
+			<ul class="article-tags">
+				
+				<li><a href='https://multiplanar3dprinter.github.io/tags/general/'>#general</a></li>
+				
+			</ul>
+		
+	</div>
+</div>
+
+</div>
+
+	
+	
+<div id="con_article">
+    <article><p>A general summary of project progress as of March 12th, 2022. This week was our
+demonstration to our professors, which happened on Wednesday, March 9th. The
+plan was to visually showcase the completed system, movement of the printhead
+and possibly a print demo if time allowed.</p>
+<span id="continue-reading"></span><h2 id="software">Software</h2>
+<h3 id="slicer">Slicer</h3>
+<p>An open source slicer named Slicer4RTN is used to generate the GCode. It is
+built on top of multiple slicers like Slic3r and CuraEngine and additional
+logics to generate GCodes for 3D printers with Rotating Tilted Nozzle(RTN),
+which is a 4-axis printer. It has the functionality of slicing parts at the
+angles requested. Below are gif showing several sliced parts at a 45° angle.</p>
+<p><img src="/media/2022-03-12/SlantedOverhang.gif" alt="Sliced 45° Part with Overhang" /></p>
+<h2 id="electrical">Electrical</h2>
+<p>The PCBs did not arrive in time for the demo itself, but they arrived a few days
+later. From there, some preliminary testing would begin. From the first
+inspection, there did not seem to be any issues with the boards. The power rails
+for 24V, 5V and 3.3V were all functional, though the 5V rail was instead at
+4.6V. However, since there aren’t many 5V components on the board, especially
+with digital logic, this discrepancy is not an issue. The motor controllers were
+also configured with a reference voltage set at 0.96V to limit the stepper motor
+current to 1.2A.</p>
+<p><img src="/media/2022-03-12/PCB.jpg" alt="PCB" /></p>
+<h2 id="system-functionality-at-the-demo">System Functionality at the Demo</h2>
+<p>The general functionality of the system was working by the demo date, though we
+did not have time to configure for a more complex print beside a standard test
+overhang print.</p>
+<p>The gif below shows the first successful supportless 90 degree print from our 3D
+printer, something that would not be possible with a standard 3D printer.</p>
+<p><img src="/media/2022-03-12/90deg-overhang.gif" alt="90° Overhang" /></p>
+<p>Additionally, the below gif shows the movement demonstration that was shown on
+the day of the demo. It consists of each of the Tilt and Turn axes moving on
+their own as well as together.</p>
+<p><img src="/media/2022-03-12/Movement.gif" alt="Moving Turn &amp; Tilt Axes" /></p>
+</article>
+</div>
+
+</main>
+
+
+	<footer id="footer"><div id="row1">
+		<span style="display: inline-block;">Copyright &copy; 2021—2022 Brendan Arciszewski, Louie Chen, Lucille Huang, Edward Yang</span>
+	</div></footer>
+</body>
+</html>

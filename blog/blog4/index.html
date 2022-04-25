@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Blog #4: Progress as of 2022-02-19 | MP3DP</title>
+	<link rel="icon" type="image/png" href="/favicon.png">
+	<link rel="stylesheet" href="/css/reset.css" />
+	<link rel="stylesheet" href="/css/mobile-base.css" />
+	<link rel="stylesheet" media="(max-width: 600px)" href="/css/mobile-nav.css" />
+	<link rel="stylesheet" media="(min-width: 600px)" href="/css/nav.css" />
+	<link rel="stylesheet" media="(min-width: 600px)" href="/css/tablet.css" />
+	<link rel="stylesheet" media="(min-width: 1000px)" href="/css/desktop.css" />
+	<link rel="preconnect" href="https://fonts.googleapis.com"> 
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+	<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta charset="UTF-8" />
+	<meta name="description" content="Multi-Planar 3D Printer" />
+	<meta name="keywords" content="project, fydp, mechatronics, robotics, robots, control systems, waterloo" />
+	<meta name="author" content="Brendan Arciszewski, Louie Chen, Lucille Huang, Edward Yang" />
+	
+</head>
+<body>
+	<nav id="nav">
+		<div id="navMenuToggle">
+			<input type="checkbox" title="Show/Hide Mobile Menu"/>
+			<span class="burger"></span>
+			<span class="burger"></span>
+			<span class="burger"></span>
+			<ul id="navMenu">
+				
+				<li><a 
+				   href="/"
+				   
+				   
+				   title="Home">
+					Home
+				</a></li>
+				
+				<li><a 
+				   href="/blog/"
+				   
+				   
+				   title="Blog">
+					Blog
+				</a></li>
+				
+				<li><a 
+				   href="https://github.com/multiplanar3dprinter"
+				   
+				   
+				   title="Source Code">
+					Source Code
+				</a></li>
+				
+			</ul>
+		</div>
+	</nav>
+	
+
+
+
+
+
+<section role="banner" id="header">
+	<header><h1>Blog #4: Progress as of 2022-02-19</h1></header>
+</section>
+
+
+<main>
+	
+<div id="con_sidebar">
+    
+<div class="article-info">
+	<div class="article-dates">
+		
+		<span class="article-date">2022-02-19</span>
+		
+		
+		(Updated <span class="article-date">2022-03-16</span>)
+		
+	</div>
+	<div class="article-taxonomies">
+		
+			<ul class="article-tags">
+				
+				<li><a href='https://multiplanar3dprinter.github.io/tags/general/'>#general</a></li>
+				
+			</ul>
+		
+	</div>
+</div>
+
+</div>
+
+	
+	
+<div id="con_article">
+    <article><p>A general summary of project progress as of February 19th, 2022.</p>
+<span id="continue-reading"></span><h2 id="electrical">Electrical</h2>
+<p>The schematic for the custom controller board has been completed. Each of the
+sections are described in further detail below.</p>
+<p><img src="/media/2022-02-19/02-23-FullSchematic.jpg" alt="Full Electrical Schematic" /></p>
+<h3 id="peripherals">Peripherals</h3>
+<p>The thermistors are in a voltage divider configuration so that the changes in
+resistance can be calculated in firmware and the limit switches have pull-up
+resistors to set the default state until the switch pulls the pin low. Both of
+these configurations have decoupling capacitors to help filter out high
+frequency noise. The fans and heaters all have the same MOSFET and pull down
+resistor configuration, though the MOSFETs are rated for different drain
+currents since the Heaters are rated for a much higher power. A MOSFET driver
+was added for the heaters to shift the logic level up to make sure that the
+drain-source ON resistance is low enough during operation. And for the remaining
+USB and LCD connections, research was conducted into how they should be
+connected and that was used as a reference for the best way to connect those
+peripherals. The LCD had to match the connections for the display on the Ender 3
+and the USB had to connect to the correct pins on the STM32. A USB EMI Shield
+was added to reduce noise and interference on the high speed lines.</p>
+<p><img src="/media/2022-02-19/02-23-Peripherals.png" alt="Peripherals Schematic" /></p>
+<h3 id="a4988-stepper-motor-drivers">A4988 Stepper Motor Drivers</h3>
+<p>In the motor controller section, it consisted of the 6 motor controllers that
+are needed for the 6 axes. For these, the layout primarily follows the
+requirements laid out in the data sheet. The sense resistors and the
+potentiometer at the current limiting voltage reference were chosen such that
+the maximum current the controller can draw is below the rating of the motors at
+1.5A. Additionally, the jumpers at the MSx pins, which define the step size are
+used for calibrating the reference voltage, since they need to remain
+unconnected when doing that. To allow for more customization after assembly of
+the PCBs,  the jumpers can just be bridged with solder to pull them up and set
+the smallest step size possible as 1/16th.</p>
+<p><img src="/media/2022-02-19/02-23-StepperCtrl.png" alt="Stepper Control Schematic" /></p>
+<h3 id="mcu">MCU</h3>
+<p>The MCU section mostly consists of the setup required for normal operation as
+well as all the connections from the peripherals. STM32CubeIDE was used to lay
+out all the pins so that there aren’t any conflicts, and that the pins
+correspond with where I will be placing the components. A test LED and test
+Button was also added to leftover pins to help with debugging.</p>
+<p><img src="/media/2022-02-19/02-23-MCU.png" alt="MCU Schematic" /></p>
+<h3 id="power">Power</h3>
+<p>Finally, the power section consists of a reverse voltage protection circuit, a
+buck converter and an LDO for converting the required voltage rails. The
+majority of the board uses 24V or 3.3V, but the MOSFET Driver and USB use 5V so
+the buck converter converts to 5V first before using the LDO. For these parts,
+they were chosen based on availability from the PCB vendor with suitable voltage
+and current ratings. The data sheet was followed closely for the design of these
+power conversion circuits.</p>
+<p><img src="/media/2022-02-19/02-23-Power.png" alt="Power Schematic" /></p>
+</article>
+</div>
+
+</main>
+
+
+	<footer id="footer"><div id="row1">
+		<span style="display: inline-block;">Copyright &copy; 2021—2022 Brendan Arciszewski, Louie Chen, Lucille Huang, Edward Yang</span>
+	</div></footer>
+</body>
+</html>
